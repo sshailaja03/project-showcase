@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: devlink-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: FRONTEND_URL
+        sync: false # Provide the Vercel URL in the Render dashboard after deploying frontend
+      - key: MONGO_URI
+        sync: false # Provide the MongoDB Atlas Connection String in the Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
