@@ -15,28 +15,30 @@ const Dashboard = () => {
     title: '', description: '', tags: '', liveUrl: '', githubUrl: '', thumbnail: ''
   });
 
-  useEffect(() => {
-    fetchProfile();
-    fetchProjects();
-  }, [user]);
-
-  const fetchProfile = async () => {
+  const fetchProfile = React.useCallback(async () => {
     try {
       const res = await axios.get(`/users/${user.username}`);
       setProfile(res.data);
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [user.username]);
 
-  const fetchProjects = async () => {
+  const fetchProjects = React.useCallback(async () => {
     try {
       const res = await axios.get(`/projects/${user.username}`);
       setProjects(res.data);
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [user.username]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      await Promise.all([fetchProfile(), fetchProjects()]);
+    };
+    loadData();
+  }, [fetchProfile, fetchProjects]);
 
   const handleCreateProject = async (e) => {
     e.preventDefault();
@@ -63,9 +65,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen p-8 max-w-7xl mx-auto relative">
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-space-glow/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
-
+    <div className="min-h-screen p-8 max-w-7xl mx-auto relative z-10">
       <header className="flex justify-between items-center mb-12 bg-space-card/50 backdrop-blur-md p-4 rounded-2xl border border-space-border">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-space-dark rounded-full border border-space-border flex items-center justify-center overflow-hidden">

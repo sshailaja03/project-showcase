@@ -1,21 +1,22 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext();
+
+axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+axios.defaults.withCredentials = true;
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-  axios.defaults.withCredentials = true;
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const res = await axios.get('/auth/me');
         setUser({ userId: res.data.userId });
-      } catch (err) {
+      } catch {
         setUser(null);
       } finally {
         setLoading(false);

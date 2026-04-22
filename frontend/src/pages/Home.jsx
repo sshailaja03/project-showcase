@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import TiltCard from '../components/TiltCard';
 import { Terminal } from 'lucide-react';
+import FloatingTechElements from '../components/FloatingTechElements';
 
 const Home = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -33,11 +34,8 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-space-glow/20 rounded-full blur-[100px] -z-10"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] -z-10"></div>
-
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden z-10">
+      <FloatingTechElements />
       <div className="mb-12 text-center">
         <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-space-card border border-space-border mb-4">
           <Terminal size={32} className="text-space-glow" />

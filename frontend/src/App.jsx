@@ -4,6 +4,7 @@ import { AuthProvider, AuthContext } from './context/AuthContext';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import PublicProfile from './pages/PublicProfile';
+import BackgroundEffects from './components/BackgroundEffects';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = React.useContext(AuthContext);
@@ -17,7 +18,8 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-space-dark text-gray-200 selection:bg-space-glow selection:text-white">
+        <div className="min-h-screen bg-space-dark text-gray-200 selection:bg-space-glow selection:text-white relative z-0">
+          <BackgroundEffects />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route 

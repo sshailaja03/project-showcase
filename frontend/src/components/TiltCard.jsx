@@ -66,7 +66,9 @@ const TiltCard = ({ children, className = '' }) => {
         className={`preserve-3d card-glow-border rounded-xl bg-space-card border border-space-border transition-all duration-200 ease-out shadow-lg w-full h-full ${className}`}
         style={{
           transform: `rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg) ${isHovered ? 'scale3d(1.02, 1.02, 1.02)' : ''}`,
-          transition: isHovered ? 'transform 0.1s ease-out' : 'transform 1.5s ease-in-out',
+          transition: isHovered 
+            ? 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)' 
+            : 'transform 1.5s cubic-bezier(0.23, 1, 0.32, 1)',
         }}
       >
         <div className="preserve-3d w-full h-full p-6 relative">

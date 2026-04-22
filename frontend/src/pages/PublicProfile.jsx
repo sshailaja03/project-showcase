@@ -21,7 +21,7 @@ const PublicProfile = () => {
         ]);
         setProfile(profileRes.data);
         setProjects(projectsRes.data);
-      } catch (err) {
+      } catch {
         setError('User not found');
       } finally {
         setLoading(false);
@@ -35,9 +35,7 @@ const PublicProfile = () => {
   if (error) return <div className="min-h-screen flex items-center justify-center text-red-400">{error}</div>;
 
   return (
-    <div className="min-h-screen p-8 max-w-7xl mx-auto relative">
-      <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-space-glow/5 rounded-full blur-[150px] -z-10 pointer-events-none"></div>
-
+    <div className="min-h-screen p-8 max-w-7xl mx-auto relative z-10">
       <div className="flex flex-col md:flex-row gap-12 mb-16">
         <div className="w-full md:w-1/3 lg:w-1/4">
           <div className="h-[400px]">
