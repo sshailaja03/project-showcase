@@ -38,7 +38,7 @@
    cd backend
    npm install
    ```
-   *Create a `.env` file in the `backend` folder with your environment variables.*
+   `cp .env.example .env`, then set `MONGO_URI`, `JWT_SECRET`, and `FRONTEND_URL` for your environment. Never commit the resulting `.env` file.
 
 3. **Set up Frontend:**
    ```bash
