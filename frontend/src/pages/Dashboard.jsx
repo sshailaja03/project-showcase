@@ -9,6 +9,8 @@ const Dashboard = () => {
   const [projects, setProjects] = useState([]);
   const [profile, setProfile] = useState({});
   const [isAddingProject, setIsAddingProject] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   
   // Project Form State
   const [newProject, setNewProject] = useState({
@@ -35,7 +37,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      await Promise.all([fetchProfile(), fetchProjects()]);
+      setLoading(true);
+      setError('');
+      try {
+        await Promise.all([fetchProfile(), fetchProjects()]);
+      } catch {
+        setError('Unable to load your dashboard. Please try again.');
+      } finally {
+        setLoading(false);
+      }
     };
     loadData();
   }, [fetchProfile, fetchProjects]);
@@ -86,6 +96,18 @@ const Dashboard = () => {
         </div>
       </header>
 
+      {error && (
+        <div role="alert" className="mb-6 rounded-lg border border-red-400/30 bg-red-400/10 px-4 py-3 text-red-300">
+          {error}
+        </div>
+      )}
+
+      {loading ? (
+        <div className="py-16 text-center text-gray-400" role="status">
+          Loading your projects...
+        </div>
+      ) : (
+        <>
       <div className="mb-8 flex justify-between items-center">
         <h2 className="text-3xl font-bold">Your Projects</h2>
         <button 
@@ -148,6 +170,8 @@ const Dashboard = () => {
           </div>
         )}
       </div>
+        </>
+      )}
     </div>
   );
 };
