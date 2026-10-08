@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test"
   },
   "keywords": [],
   "author": "",
@@ -20,5 +20,8 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb-memory-server": "^11.0.1",
     "mongoose": "^9.5.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.1.4"
   }
 }
