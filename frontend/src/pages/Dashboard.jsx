@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
+import api from '../lib/api';
 import { LogOut, Plus, Edit2, Trash2, User as UserIcon } from 'lucide-react';
 import ProjectCard from '../components/ProjectCard';
 
@@ -19,19 +19,21 @@ const Dashboard = () => {
 
   const fetchProfile = React.useCallback(async () => {
     try {
-      const res = await axios.get(`/users/${user.username}`);
+      const res = await api.get(`/users/${user.username}`);
       setProfile(res.data);
     } catch (err) {
       console.error(err);
+      throw err;
     }
   }, [user.username]);
 
   const fetchProjects = React.useCallback(async () => {
     try {
-      const res = await axios.get(`/projects/${user.username}`);
+      const res = await api.get(`/projects/${user.username}`);
       setProjects(res.data);
     } catch (err) {
       console.error(err);
+      throw err;
     }
   }, [user.username]);
 
@@ -54,7 +56,7 @@ const Dashboard = () => {
     e.preventDefault();
     try {
       const tagsArray = newProject.tags.split(',').map(tag => tag.trim()).filter(t => t);
-      await axios.post('/projects', { ...newProject, tags: tagsArray });
+      await api.post('/projects', { ...newProject, tags: tagsArray });
       setIsAddingProject(false);
       setNewProject({ title: '', description: '', tags: '', liveUrl: '', githubUrl: '', thumbnail: '' });
       fetchProjects();
@@ -66,7 +68,7 @@ const Dashboard = () => {
   const handleDelete = async (id) => {
     if(window.confirm('Are you sure you want to delete this project?')) {
       try {
-        await axios.delete(`/projects/${id}`);
+        await api.delete(`/projects/${id}`);
         fetchProjects();
       } catch (err) {
         console.error(err);
