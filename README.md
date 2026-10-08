@@ -1,81 +1,219 @@
 # DevLink 🚀
 
-**DevLink** is a premium, "zero-gravity" portfolio platform designed for developers who want to showcase their work in a futuristic and interactive way.
+> A full-stack developer portfolio platform with JWT authentication, project management, public developer profiles, and an interactive React interface.
 
-## ✨ Features
+## Overview
 
-- **Zero-Gravity UI:** Interactive 3D tilt cards that react to mouse movement with high-precision physics.
-- **Dynamic Backgrounds:** Global mouse-tracking glow and floating ambient "blob" animations that persist across pages.
-- **Secure Authentication:** Full JWT-based login and registration system for managing your personal showcase.
-- **Project Dashboard:** Create, manage, and delete your portfolio projects with a streamlined interface.
-- **Public Profiles:** Unique URLs for every developer (e.g., `/u/username`) to share their universe of code with the world.
-- **Tech-Centric Design:** Scattered floating tech icons and security indicators for a modern, "safe space" developer vibe.
+DevLink solves a simple problem: developers often have projects scattered across repositories, portfolios, and social profiles.
 
-## 🛠️ Tech Stack
+The application provides a single shareable profile where a developer can authenticate, manage projects, and publish a public portfolio through a unique URL.
 
-- **Frontend:** React, Vite, Tailwind CSS, Lucide React
-- **Backend:** Node.js, Express, MongoDB
-- **State Management:** React Context API
-- **Animations:** CSS Keyframes & 3D Transform Utilities
+The project combines **full-stack development, authentication, REST APIs, database modeling, and interactive frontend engineering** in one application.
 
-## 🚀 Getting Started
+## Core Features
+
+- **JWT Authentication** — registration and login with protected routes
+- **Project Dashboard** — create, update, and delete portfolio projects
+- **Public Profiles** — shareable developer pages at `/u/:username`
+- **Interactive UI** — 3D tilt cards, cursor-reactive effects, and animated backgrounds
+- **Responsive Design** — portfolio experience across desktop and smaller screens
+- **Secure Configuration** — environment-based secrets and backend configuration
+
+## Architecture
+
+```
+┌──────────────────────────────┐
+│        React Frontend        │
+│                              │
+│  Pages → Components → API    │
+└──────────────┬───────────────┘
+               │ HTTP / REST
+               ▼
+┌──────────────────────────────┐
+│       Express Backend        │
+│                              │
+│ Routes → Middleware →        │
+│ Controllers → Data Models    │
+└──────────────┬───────────────┘
+               │
+               ▼
+        ┌─────────────┐
+        │   MongoDB   │
+        └─────────────┘
+
+Authentication flow:
+Client → Login/Register → Express → JWT → Protected API routes
+```
+
+## Engineering Highlights
+
+### Authentication & Authorization
+
+DevLink uses JWT-based authentication to protect user-specific operations.
+
+The general request flow is:
+
+1. User registers or logs in.
+2. Backend validates the request.
+3. Server issues a JWT.
+4. Client includes the token on protected requests.
+5. Authentication middleware validates the token before allowing access.
+
+### Project Management
+
+Authenticated users can manage their own portfolio projects through REST endpoints.
+
+This separates:
+
+- UI state
+- HTTP/API communication
+- authentication middleware
+- controller logic
+- database persistence
+
+### Public Profiles
+
+Developers receive a unique profile route:
+
+```text
+/u/username
+```
+
+This allows the private dashboard and public portfolio experience to remain separate while using the same underlying project data.
+
+### Interactive Frontend
+
+The UI uses CSS transforms, animated backgrounds, cursor tracking, and reusable React components to create a more engaging portfolio experience without requiring a heavy 3D rendering engine.
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, Vite |
+| Styling | Tailwind CSS |
+| Icons | Lucide React |
+| State | React Context API |
+| Backend | Node.js, Express 5 |
+| Database | MongoDB / Mongoose |
+| Authentication | JWT, bcryptjs |
+| HTTP Client | Axios |
+| Deployment | Render |
+
+## Project Structure
+
+```text
+project-showcase/
+├── backend/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   └── server.js
+├── frontend/
+│   └── src/
+│       ├── components/
+│       ├── pages/
+│       └── ...
+├── render.yaml
+└── README.md
+```
+
+## Quality & CI
+
+The repository includes CI checks for the full-stack build, helping catch frontend/backend build regressions before deployment.
+
+### Current testing opportunity
+
+The backend currently has room for a dedicated automated API test suite. High-value cases include:
+
+- registration validation
+- successful login
+- invalid credentials
+- protected-route authorization
+- project CRUD operations
+- unauthorized project access
+
+This is intentionally listed as future engineering work rather than claiming tests that do not currently exist.
+
+## Getting Started
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v16+ recommended)
-- npm or yarn
+- Node.js 18+
+- npm
+- MongoDB
 
-### Installation
+### 1. Clone
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/sshailaja03/project-showcase.git
-   cd project-showcase
-   ```
-
-2. **Set up Backend:**
-   ```bash
-   cd backend
-   npm install
-   ```
-   `cp .env.example .env`, then set `MONGO_URI`, `JWT_SECRET`, and `FRONTEND_URL` for your environment. Never commit the resulting `.env` file.
-
-3. **Set up Frontend:**
-   ```bash
-   cd ../frontend
-   npm install
-   ```
-
-### Running Locally
-
-To run the full-stack application, start both the backend and the frontend:
-
-1. **Start Backend Server:**
-   ```bash
-   cd backend
-   npm start
-   ```
-   *The API will run on `http://localhost:5000`*
-
-2. **Start Frontend Dev Server:**
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-   *The application will be accessible at `http://localhost:5173`*
-
-## 📁 Project Structure
-
-```text
-├── backend/            # Express server, Auth controllers, and DB models
-├── frontend/           # React application, 3D components, and custom hooks
-├── render.yaml         # Deployment configuration for Render.com
-└── README.md           # Project documentation
+```bash
+git clone https://github.com/sshailaja03/project-showcase.git
+cd project-showcase
 ```
 
-## 📜 License
+### 2. Configure Backend
 
-Distributed under the MIT License.
+```bash
+cd backend
+npm install
+cp .env.example .env
+```
+
+Set the required values in `.env`:
+
+```env
+MONGO_URI=<your-mongodb-connection-string>
+JWT_SECRET=<your-secret>
+FRONTEND_URL=<your-frontend-url>
+```
+
+Never commit real secrets.
+
+### 3. Configure Frontend
+
+```bash
+cd ../frontend
+npm install
+```
+
+### 4. Run Locally
+
+Backend:
+
+```bash
+cd backend
+npm start
+```
+
+Frontend:
+
+```bash
+cd frontend
+npm run dev
+```
+
+The development servers use the ports configured by the project environment.
+
+## What This Project Demonstrates
+
+- Full-stack React + Node.js development
+- REST API design
+- JWT authentication and protected routes
+- MongoDB data persistence
+- Frontend state management
+- Responsive component-based UI design
+- Interactive CSS and animation techniques
+- Environment-based configuration
+- CI-based build verification
+
+## Roadmap
+
+- Add automated backend/API tests
+- Add rate limiting and stronger request validation
+- Add project search/filtering
+- Add profile analytics
+- Improve accessibility and keyboard navigation
+- Add richer deployment monitoring
 
 ---
-Built for developers, by developers.
+
+**Shailaja Singh** · Software Engineering Student · C++ · DSA · Full-Stack Development
