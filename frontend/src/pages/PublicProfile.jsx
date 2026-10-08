@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../lib/api';
 import ProjectCard from '../components/ProjectCard';
 import TiltCard from '../components/TiltCard';
 import { User, Code, Link } from 'lucide-react';
@@ -16,23 +16,23 @@ const PublicProfile = () => {
     const fetchData = async () => {
       try {
         const [profileRes, projectsRes] = await Promise.all([
-          axios.get(`/users/${username}`),
-          axios.get(`/projects/${username}`)
+          api.get(`/users/${username}`),
+          api.get(`/projects/${username}`)
         ]);
         setProfile(profileRes.data);
         setProjects(projectsRes.data);
       } catch {
-        setError('User not found');
+        setError('User not found or could not be loaded.');
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchData();
   }, [username]);
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-  if (error) return <div className="min-h-screen flex items-center justify-center text-red-400">{error}</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center" role="status">Loading profile...</div>;
+  if (error) return <div className="min-h-screen flex items-center justify-center text-red-400" role="alert">{error}</div>;
 
   return (
     <div className="min-h-screen p-8 max-w-7xl mx-auto relative z-10">
@@ -46,41 +46,22 @@ const PublicProfile = () => {
                 </div>
                 <h1 className="text-2xl font-bold mb-2">@{profile.username}</h1>
                 <p className="text-gray-400 mb-6 flex-1 text-sm">{profile.bio || 'Full-stack developer navigating the code cosmos.'}</p>
-                
                 <div className="flex gap-4 mt-auto">
-                  {profile.socialLinks?.github && (
-                    <a href={profile.socialLinks.github} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
-                      <Code />
-                    </a>
-                  )}
-                  {profile.socialLinks?.linkedin && (
-                    <a href={profile.socialLinks.linkedin} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors">
-                      <Link />
-                    </a>
-                  )}
+                  {profile.socialLinks?.github && <a href={profile.socialLinks.github} target="_blank" rel="noreferrer" aria-label="GitHub profile" className="text-gray-400 hover:text-white transition-colors"><Code /></a>}
+                  {profile.socialLinks?.linkedin && <a href={profile.socialLinks.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn profile" className="text-gray-400 hover:text-blue-400 transition-colors"><Link /></a>}
                 </div>
               </div>
             </TiltCard>
           </div>
         </div>
-
         <div className="w-full md:w-2/3 lg:w-3/4">
           <div className="flex items-center gap-3 mb-8 pb-4 border-b border-space-border">
             <Code className="text-space-glow" />
             <h2 className="text-3xl font-bold">Showcase</h2>
           </div>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projects.map(project => (
-              <div key={project._id} className="h-[400px]">
-                <ProjectCard project={project} />
-              </div>
-            ))}
-            {projects.length === 0 && (
-              <div className="col-span-full py-12 text-center text-gray-500 border border-dashed border-space-border rounded-xl">
-                No projects found for this user.
-              </div>
-            )}
+            {projects.map(project => <div key={project._id} className="h-[400px]"><ProjectCard project={project} /></div>)}
+            {projects.length === 0 && <div className="col-span-full py-12 text-center text-gray-500 border border-dashed border-space-border rounded-xl">No projects found for this user.</div>}
           </div>
         </div>
       </div>
