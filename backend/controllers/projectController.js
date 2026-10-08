@@ -1,20 +1,23 @@
 const Project = require('../models/Project');
+const User = require('../models/User');
+
+const projectFields = ['title', 'description', 'tags', 'liveUrl', 'githubUrl', 'thumbnail'];
+
+const pickProjectFields = (body) =>
+  Object.fromEntries(
+    projectFields
+      .filter((field) => body[field] !== undefined)
+      .map((field) => [field, body[field]])
+  );
 
 exports.createProject = async (req, res) => {
   try {
-    const { title, description, tags, liveUrl, githubUrl, thumbnail } = req.body;
-    
-    const project = new Project({
-      title,
-      description,
-      tags,
-      liveUrl,
-      githubUrl,
-      thumbnail,
+    const data = pickProjectFields(req.body);
+    const project = await Project.create({
+      ...data,
       user: req.user.userId
     });
 
-    await project.save();
     res.status(201).json(project);
   } catch (err) {
     console.error(err);
@@ -24,8 +27,8 @@ exports.createProject = async (req, res) => {
 
 exports.getProjectsByUser = async (req, res) => {
   try {
-    const User = require('../models/User');
     const user = await User.findOne({ username: req.params.username });
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -41,18 +44,20 @@ exports.getProjectsByUser = async (req, res) => {
 exports.updateProject = async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
+
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
     }
 
     if (project.user.toString() !== req.user.userId) {
-      return res.status(401).json({ message: 'Not authorized' });
+      return res.status(403).json({ message: 'Not authorized' });
     }
 
+    const updates = pickProjectFields(req.body);
     const updatedProject = await Project.findByIdAndUpdate(
       req.params.id,
-      { $set: req.body },
-      { new: true }
+      { $set: updates },
+      { new: true, runValidators: true }
     );
 
     res.json(updatedProject);
@@ -65,12 +70,13 @@ exports.updateProject = async (req, res) => {
 exports.deleteProject = async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
+
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
     }
 
     if (project.user.toString() !== req.user.userId) {
-      return res.status(401).json({ message: 'Not authorized' });
+      return res.status(403).json({ message: 'Not authorized' });
     }
 
     await Project.findByIdAndDelete(req.params.id);
