@@ -1,10 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../lib/api';
 
 export const AuthContext = createContext();
-
-axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-axios.defaults.withCredentials = true;
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -13,11 +10,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const { data } = await axios.get('/auth/me');
-        setUser({
-          userId: data.userId,
-          username: data.username
-        });
+        const { data } = await api.get('/auth/me');
+        setUser({ userId: data.userId, username: data.username });
       } catch {
         setUser(null);
       } finally {
@@ -29,19 +23,19 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (username, password) => {
-    const { data } = await axios.post('/auth/login', { username, password });
+    const { data } = await api.post('/auth/login', { username, password });
     setUser({ username: data.username });
     return data;
   };
 
   const register = async (username, password) => {
-    const { data } = await axios.post('/auth/register', { username, password });
+    const { data } = await api.post('/auth/register', { username, password });
     setUser({ username: data.username });
     return data;
   };
 
   const logout = async () => {
-    await axios.get('/auth/logout');
+    await api.get('/auth/logout');
     setUser(null);
   };
 
